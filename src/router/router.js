@@ -34,15 +34,14 @@ const routes = [
                 path: '/musiclistview/:disstid',
                 name: 'MusicListView',
                 component: () => import("../views/Home/MusicListView.vue")
+            },
+            {
+                path: '/musiclistsview/:categoryid',
+                name: 'MusicMore',
+                component: () => import("../components/MusicMore.vue")
             }
         ]
-    },
-    {
-        path: '/musiclistview/:disstid',
-        name: 'MusicListView',
-        component: () => import("../views/Home/MusicListView.vue")
     }
-
 ];
 
 

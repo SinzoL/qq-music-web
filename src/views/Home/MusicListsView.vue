@@ -1,12 +1,11 @@
 <!-- 预期是期望展示多张歌单的页面 -->>
 
-<!-- 这个是为了展示hot歌曲版本 -->
+<!-- 也将作为显示一个目录的页面 -->
 
 <template>
     <div class="music-list-container">
-        <div class="list-name"> <strong>{{ categoryName }}</strong> <img src="../../assets/img/more.png" class="music-list-more" v-on:click="goToMoreMusicList" type="button"/> </div>
+        <div class="list-name"> <strong>{{ categoryName }}</strong>  </div>
         <div v-if="musicLists.length > 0" class="music-list-wrapper">
-
             <div v-for="(musicList, index) in musicLists" :key="index" class="music-list-item"
                 @click="goToMusicListDetail(musicList)">
                 <img :src="musicList.imgurl" :alt="musicList.dissname" class="music-list-image" />
@@ -38,7 +37,7 @@ export default {
         },   //传入的歌单类别
         categoryName: {
             String,
-            default: '热门歌单'
+            default: '歌单'
         },
         limit: {
             type: Number,
@@ -53,23 +52,20 @@ export default {
         const fetchMusicLists = async () => {
             console.log(props.categoryId);
             try {
-                console.log(1);
                 const response = await api.getSongLists({
                     categoryId: props.categoryId,
                     limit: props.limit
                 }); // 传递歌单 ID      
-                //console.log(2);            
-                //console.log(response);
                 musicLists.value = response.response.data.list; // 提取每个歌单的数据
-                console.log(musicLists)
+                
             } catch (error) {
-                console.error('Hot-获取歌单失败：', error);
+                console.error('获取歌单失败：', error);
             }
         };
         // 跳转到歌单详情页
         const goToMusicListDetail = (musicList) => {
             console.log(musicList.dissid);
-            store.dispatch('setMusicListData', musicList);
+            store.dispatch('setMusicListData', musicList);       //只是存入了歌单id
             router.push({ path: `/musiclistview/${musicList.dissid}` });
         };
 
@@ -87,10 +83,6 @@ export default {
 </script>
 
 <style scoped>
-.music-list-more {
-    float: right;
-    width: 20px;
-}
 
 
 .music-list-container {

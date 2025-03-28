@@ -1,75 +1,103 @@
 <!-- 展示一张歌单内部的具体内容 -->
 
+<!-- 也将作为显示一个目录的页面 -->
+
 <template>
-  <div v-if="musiclist" class="music-list-view">
-    <img :src="musiclist.logo" alt="歌单封面" class="music-list-view__cover">
-    <h2 class="music-list-view__title">
-      {{ musiclist.dissname }}
-    </h2>
-    <div class="music-list-view__meta">
-      <p>创建时间：{{ new Date(musiclist.ctime) }}</p>
-      <p>歌曲数量：{{ musiclist.songnum }}</p>
+  <div class="listview-container">
+    <div v-if="musiclist" class="music-list-view">
+      <div class="img-wrapper"> <img :src="musiclist.logo" alt="歌单封面" class="music-list-view__cover">
+      </div>
+      <h2 class="music-list-view__title">
+        {{ musiclist.dissname }}
+      </h2>
+      <div class="music-list-view__meta">
+        <p>创建时间：{{ new Date(musiclist.ctime) }}</p>
+        <p>歌曲数量：{{ musiclist.songnum }}</p>
+      </div>
+
+      <ul class="music-list-view__list">
+        <li v-for="song in musiclist.songlist" :key="song.id" class="music-list-view__item">
+
+          <img :src="song.album.picUrl || musiclist.logo" alt="歌曲封面" class="music-list-view__img">
+
+          <div class="music-list-view__info">
+            <h3 class="music-list-view__name">{{ song.name }}</h3>
+            <p class="music-list-view__artist">
+              歌手：{{ song.singer[0].name }}
+            </p>
+            <p class="music-list-view__album">
+              专辑：{{ song.album.name }}
+            </p>
+          </div>
+          <div class="music-list-view__duration">
+            时长: {{ formatDuration(song.interval) }}
+          </div>
+          <button class="music-list-view__play-btn" @click="playSong(song)">
+            播放
+          </button>
+        </li>
+      </ul>
     </div>
-
-    <ul class="music-list-view__list">
-      <li v-for="song in musiclist.songlist" :key="song.id" class="music-list-view__item">
-
-        <img :src="song.album.picUrl || musiclist.logo" alt="歌曲封面" class="music-list-view__cover">
-
-        <div class="music-list-view__info">
-          <h3 class="music-list-view__name">{{ song.name }}</h3>
-          <p class="music-list-view__artist">
-            歌手：{{ song.singer[0].name }}
-          </p>
-          <p class="music-list-view__album">
-            专辑：{{ song.album.name }}
-          </p>
-        </div>
-        <div class="music-list-view__duration">
-          时长: {{ formatDuration(song.interval) }}
-        </div>
-        <button class="music-list-view__play-btn" @click="playSong(song)">
-          播放
-        </button>
-      </li>
-    </ul>
+    <div v-else class="loading">
+      <p>加载中...</p>
+    </div>
   </div>
+
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
+import api from '../../api';
+import { ref } from 'vue';
 
 export default {
   name: 'MusicListView',
   setup() {
     const store = useStore();
-    const musiclist = computed(() => {
+    const route = useRoute();
+    let musiclistInfo = computed(() => {
       return store.state.musicListData;
-    })
+    });
+    let musiclist = ref([]);
+
+    const fetchMusicList = async () => {
+      if (route.params.disstid) {
+        musiclistInfo = ref({ dissid: route.params.disstid });
+      }
+      try {
+        const response = await api.getMusicList(
+          { 'disstid': musiclistInfo.value.dissid }); // 传递歌单 ID;   
+
+        musiclist.value = response.response.cdlist[0]; // 提取每个歌单的数据
+        console.log('musiclist', musiclist.value)
+      } catch (error) {
+        console.error('获取歌曲失败：', error);
+      }
+    };
     const formatDuration = (seconds) => {
       const minutes = Math.floor(seconds / 60);
       const remainSecs = seconds % 60;
-      return `${minutes}:${remainSecs < 10 ? '0' + remainSecs : remainSecs}`;
+      return `${minutes}分 ${remainSecs < 10 ? '0' + remainSecs : remainSecs}秒`;
     };
+    onMounted(() => {
+      console.log('test');
+      fetchMusicList();
+    });
     return {
       musiclist,
       formatDuration
-    }
+    };
   },
-
-  mounted() {
-    console.log('test')
-    console.log(this.musiclist);
-  }
 
 }
 </script>
 
 <style scoped lang="scss">
 // 变量定义
-$primary-color: #ff5722;
-$hover-color: #e64a19;
+$primary-color: #22ff98;
+$hover-color: #64e619;
 $text-dark: #222;
 $text-light: #888;
 $bg-gradient: linear-gradient(135deg, #f9f9f9, #e3e3e3);
@@ -105,6 +133,23 @@ $transition: all 0.3s ease;
     }
   }
 
+  .music-list-view__cover {
+    width: 400px;
+    height: 400px;
+    text-align: center;
+  }
+
+  .img-wrapper {
+    text-align: center;
+  }
+
+  .music-list-view__img {
+    width: 80px;
+    display: inline-block;
+    border-radius: 8px;
+    padding-right: 15px;
+  }
+
   // 歌曲列表
   &__list {
     list-style: none;
@@ -129,6 +174,7 @@ $transition: all 0.3s ease;
 
       .music-list-view__play-btn {
         background: $hover-color;
+        margin-left: 10px;
       }
     }
   }

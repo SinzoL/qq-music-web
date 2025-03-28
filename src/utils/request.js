@@ -43,8 +43,6 @@ instance.interceptors.response.use(
     }
 
     const {status, data } = response;
-    //console.log("response", response);
-    //console.log("data", data);
     if (status === 200) {
       return data; // 返回实际数据
     } else {

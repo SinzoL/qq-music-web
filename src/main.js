@@ -6,7 +6,7 @@ import vuetyped from 'vue3typed'
 import api from "./api"
 import 'element-plus/dist/index.css'
 import ElementPlus from 'element-plus'
-import store from './store/store'
+import store from './store'
 
 
 const app = createApp(App)

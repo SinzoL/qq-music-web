@@ -11,7 +11,7 @@ const api = {
         return get('/getAlbunmInfo', albumid)
     },
     getSongLists(params){
-        console.log(params)
+        //console.log(params)
         return get('/getSongLists', params)
     },
     getSongListCategory(){
