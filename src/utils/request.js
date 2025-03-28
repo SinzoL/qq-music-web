@@ -3,7 +3,7 @@ import { ElLoading  } from 'element-plus'; // 以 element-plus 为例
 
 // 创建 axios 实例
 const instance = axios.create({
-  baseURL: 'http://localhost:3200', // 设置基础 URL
+  baseURL: 'https://my-music-api-olive.vercel.app', // 设置基础 URL
   timeout: 10000, // 请求超时时间
   headers: {
     'Content-Type': 'application/json', // 默认请求头
@@ -43,8 +43,8 @@ instance.interceptors.response.use(
     }
 
     const {status, data } = response;
-    console.log("response", response);
-    console.log("data", data);
+    //console.log("response", response);
+    //console.log("data", data);
     if (status === 200) {
       return data; // 返回实际数据
     } else {

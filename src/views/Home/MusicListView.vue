@@ -1,26 +1,21 @@
+<!-- 展示一张歌单内部的具体内容 -->
+
 <template>
   <div v-if="musiclist" class="music-list-view">
-    <!-- 歌单封面 -->
     <img :src="musiclist.logo" alt="歌单封面" class="music-list-view__cover">
-
-    <!-- 歌单标题 -->
     <h2 class="music-list-view__title">
       {{ musiclist.dissname }}
     </h2>
-
-    <!-- 歌单信息 -->
     <div class="music-list-view__meta">
       <p>创建时间：{{ new Date(musiclist.ctime) }}</p>
       <p>歌曲数量：{{ musiclist.songnum }}</p>
     </div>
 
-    <!-- 歌曲列表 -->
     <ul class="music-list-view__list">
       <li v-for="song in musiclist.songlist" :key="song.id" class="music-list-view__item">
-        <!-- 歌曲封面 -->
+
         <img :src="song.album.picUrl || musiclist.logo" alt="歌曲封面" class="music-list-view__cover">
 
-        <!-- 歌曲信息 -->
         <div class="music-list-view__info">
           <h3 class="music-list-view__name">{{ song.name }}</h3>
           <p class="music-list-view__artist">
@@ -30,13 +25,9 @@
             专辑：{{ song.album.name }}
           </p>
         </div>
-
-        <!-- 歌曲时长 -->
         <div class="music-list-view__duration">
           时长: {{ formatDuration(song.interval) }}
         </div>
-
-        <!-- 播放按钮 -->
         <button class="music-list-view__play-btn" @click="playSong(song)">
           播放
         </button>
@@ -59,7 +50,7 @@ export default {
     const formatDuration = (seconds) => {
       const minutes = Math.floor(seconds / 60);
       const remainSecs = seconds % 60;
-      return `${minutes}:${remainSecs<10? '0'+remainSecs: remainSecs}`;
+      return `${minutes}:${remainSecs < 10 ? '0' + remainSecs : remainSecs}`;
     };
     return {
       musiclist,

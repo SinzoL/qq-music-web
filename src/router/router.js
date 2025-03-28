@@ -36,6 +36,11 @@ const routes = [
                 component: () => import("../views/Home/MusicListView.vue")
             }
         ]
+    },
+    {
+        path: '/musiclistview/:disstid',
+        name: 'MusicListView',
+        component: () => import("../views/Home/MusicListView.vue")
     }
 
 ];

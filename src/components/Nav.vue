@@ -4,8 +4,8 @@
       <ul class="top-nav">
         <li><router-link to="/">首页</router-link></li>
         <li><router-link to="/search">搜索</router-link></li>
-        <li><router-link to="/mine">我的</router-link></li>
         <li><router-link to="/topic">主题</router-link></li>
+        <li><router-link to="/mine">我的</router-link></li>
       </ul>
     </div>
   </div>

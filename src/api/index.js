@@ -9,6 +9,13 @@ const api = {
     },
     getAlbunmInfo(albumid) {     
         return get('/getAlbunmInfo', albumid)
+    },
+    getSongLists(params){
+        console.log(params)
+        return get('/getSongLists', params)
+    },
+    getSongListCategory(){
+        return get('/getSongListCategory')
     }
 }
 
